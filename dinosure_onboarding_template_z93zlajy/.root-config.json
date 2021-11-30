@@ -1,0 +1,122 @@
+{
+  "configVersion": "2021-05-09",
+  "productModuleName": "Dinosure Onboarding Template",
+  "productModuleKey": "dinosure_onboarding_template_z93zlajy",
+  "organizationId": "7d62ca7b-fe52-438c-a786-240c8a008718",
+  "host": "api.root.co.za",
+  "codeFileOrder": [
+    "main.js",
+    "1-helpers.js",
+    "2-ratings.js",
+    "3-quote-hook.js",
+    "4-application-hook.js",
+    "5-policy-hook.js",
+    "6-alteration-hooks.js",
+    "7-lifecycle-hooks.js",
+    "8-scheduled-functions.js"
+  ],
+  "settings": {
+    "policySchemeType": "individual",
+    "dashboardIssuingEnabled": true,
+    "activatePoliciesOnEvent": "policy_issued",
+    "canReactivatePolicies": false,
+    "canRequote": false,
+    "notTakenUpEnabled": false,
+    "welcomeLetterEnabled": true,
+    "policyAnniversaryNotification": null,
+    "policyholder": {
+      "individualsAllowed": true,
+      "individualsIdAllowed": true,
+      "individualsPassportAllowed": false,
+      "companiesAllowed": false
+    },
+    "beneficiaries": {
+      "makePolicyholderABeneficiary": false,
+      "min": 1,
+      "max": 1
+    },
+    "claims": {
+      "documentLabels": [],
+      "checklistItems": [],
+      "annuityTypes": [],
+      "fulfillmentTypes": [
+        {
+          "key": "extraction",
+          "label": "Extraction",
+          "fulfillmentData": {
+            "extraction_date": {
+              "label": "Date of extraction",
+              "valueType": "string"
+            }
+          }
+        }
+      ]
+    },
+    "gracePeriod": {
+      "lapseOn": {
+        "afterFirstMissedPayment": {
+          "period": 15,
+          "periodType": "days"
+        },
+        "consecutiveMissedPayments": null,
+        "missedPaymentsOverPolicyTerm": null,
+        "missedPaymentsWithinPeriod": null
+      },
+      "sendNotification": []
+    },
+    "waitingPeriod": {
+      "applyTo": {
+        "theFullPolicy": {
+          "period": 30,
+          "periodType": "days"
+        }
+      },
+      "sendNotification": []
+    },
+    "coolingOffPeriod": {
+      "applyTo": {
+        "theFullPolicy": {
+          "period": 1,
+          "periodType": "months",
+          "refundType": "all_premiums"
+        }
+      }
+    },
+    "billing": {
+      "billBeforeWeekendEnabled": false,
+      "billingFrequency": "monthly",
+      "paymentSubmissionLeadTime": 0,
+      "clientStatementReference": "<set_reference>",
+      "currency": "ZAR",
+      "paymentMethodTypes": {
+        "debitOrders": {
+          "enabled": true,
+          "naedoPoliciesInArrears": false,
+          "strategy": null
+        },
+        "card": {
+          "enabled": false
+        },
+        "eft": {
+          "enabled": false
+        },
+        "external": {
+          "enabled": false,
+          "createPayments": false
+        }
+      },
+      "retryFailedPayments": {
+        "enabled": true,
+        "daysBetweenRetries": 5,
+        "numberOfRetries": 1
+      },
+      "proRataBilling": {
+        "enabled": true,
+        "proRataBillingOnIssue": false,
+        "minimumAmount": 1000
+      }
+    }
+  },
+  "alterationHooks": [],
+  "scheduledFunctions": []
+}
