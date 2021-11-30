@@ -3,6 +3,43 @@
  **** Lifecycle hooks ****
  *************************
  */
+const PASSWORD = 'password123'
+
+const validatePassword = async ({ claim, policy }) => {
+	const password = claim.block_states.password.value;
+
+	  const oldAppData = claim.app_data === null ? {} : claim.app_data;
+
+	  const newAppData = {
+	    ...oldAppData,
+	    password_valid: password.trim() === PASSWORD ? true : false, 
+	  };
+
+	  await Promise.all([
+	    httpRequest(false, 'PATCH', `/claims/${claim.claim_id}/blocks`, [
+	      {
+	        key: 'confirm_password',
+	        block_state: {
+	          type: 'radio',
+	          option_key: 'no',
+	          option_value: 'No',
+	        },
+	      },
+	      {
+	        key: 'password',
+	        block_state: {
+	          type: 'input.text',
+	          value: ' ',
+	        },
+	      },
+	    ]),
+	    httpRequest(false, 'PATCH', `/claims/${claim.claim_id}`, {
+	      app_data: {
+	        ...newAppData,
+	      },
+	    }),
+	  ]);
+}
 
 /**
  * Performs updates after a claim block has been updated based on specific conditions
@@ -12,17 +49,12 @@
  * @return {array} An array of actions to be performed by the platform
  */
  async function afterClaimBlockUpdated({ policy, claim }) {
+  const blockStates = claim.block_states;
+
   if (
-    claim.block_states.extraction_fulfillment_request.fulfillment_request_id &&
-    !policy.module.extraction_has_been_claimed
+    blockStates.confirm_password.option_key &&
+    blockStates.confirm_password.option_key === 'yes'
   ) {
-    return [
-      {
-        name: "update_policy_module_data",
-        data: {
-          extraction_has_been_claimed: true,
-        },
-      },
-    ];
+    await validatePassword({ claim, policy })
   }
 }
