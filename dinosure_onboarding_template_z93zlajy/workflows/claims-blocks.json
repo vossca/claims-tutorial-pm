@@ -122,7 +122,7 @@
           "type": "payout_request",
           "payee": {
               "type": "policyholder",
-              "amount": ""{{ claim.policy.sum_assured }}",
+              "amount": "{{ claim.policy.sum_assured }}",
               "percentage": 100,
               "payment_details": {
                   "type": "eft",
