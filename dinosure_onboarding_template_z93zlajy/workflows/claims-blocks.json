@@ -1,115 +1,78 @@
 [
   {
-    "block": {
-      "key": "payout_details_heading",
-      "type": "heading",
-      "title": "Claim for policy {{ claim.policy.policy_number }}"
-    }
+      "block": {
+          "key": "beneficiary_id",
+          "type": "input.text",
+          "title": "Beneficiary ID"
+      }
+  },
+    {
+      "block": {
+          "key": "start_verification_process",
+          "type": "radio",
+          "title": "Would you like to start the beneficiary ID verification process?",
+          "options": [
+              {
+                  "key": "yes",
+                  "value": "Yes"
+              },
+              {
+                  "key": "no",
+                  "value": "No"
+              }
+          ],
+          "description": " ",
+          "default_value": "no"
+      }
   },
   {
-    "block": {
-      "key": "incident_date",
-      "type": "input.date",
-      "title": "Date of incident",
-      "default_value": ""
-    }
-  },
-  {
-    "block": {
-      "key": "accidental_death_incident_date_cover_period_warning",
-      "type": "alert",
-      "color": "warning",
-      "markdown": "Warning: Date of incident is before the cover start date."
-    },
-    "show_if": "{{#dateBetween (dateFormat (dateAdd claim.block_states.incident_date.value days=1) format='YYYYMMDD') claim.policy.start_date (dateAdd claim.policy.start_date years=5) includeStart=true}}false{{else}}true{{/dateBetween}}"
-  },
-  {
-    "block": {
-      "key": "death_payout_divider_1",
-      "type": "divider"
-    }
-  },
-  {
-    "block": {
-      "key": "claim_payout_details_heading",
-      "type": "heading",
-      "title": "Death benefit"
-    }
-  },
-  {
-    "block": {
-      "key": "death_date",
-      "type": "input.date",
-      "title": "Date of death",
-      "default_value": ""
-    }
-  },
-  {
-    "block": {
-      "key": "death_date_warning",
-      "type": "alert",
-      "color": "warning",
-      "markdown": "Warning: Date of death is before date of incident"
-    },
-    "show_if": "{{#dateBetween (dateFormat claim.block_states.death_date.value format='YYYYMMDD') (dateFormat claim.block_states.incident_date.value format='YYYYMMDD') (dateAdd claim.block_states.incident_date.value years=5) includeStart=true}}false{{else}}true{{/dateBetween}}"
-  },
-  {
-    "block": {
-      "key": "natural_death_incident_date_cover_period_warning",
-      "type": "alert",
-      "color": "warning",
-      "markdown": "Warning: Date of death is before the cover start date."
-    },
-    "show_if": "{{#dateBetween (dateFormat (dateAdd claim.block_states.death_date.value days=1) format='YYYYMMDD') claim.policy.start_date (dateAdd claim.policy.start_date years=5)}}false{{else}}true{{/dateBetween}}"
-  },
-  {
-    "block": {
-      "key": "claim_payout_request",
-      "type": "payout_request",
-      "payee": {
-        "type": "policyholder",
-        "amount": "{{ claim.policy.sum_assured }}",
-        "percentage": 100,
-        "payment_details": {
-          "type": "eft",
-          "details": {
-            "bank_name": "{{ claim.policy.beneficiaries.0.payment_details.details.bank_name }}",
-            "branch_code": "{{ claim.policy.beneficiaries.0.payment_details.details.branch_code }}",
-            "account_type": "{{ claim.policy.beneficiaries.0.payment_details.details.account_type }}",
-            "account_number": "{{ claim.policy.beneficiaries.0.payment_details.details.account_number }}"
-          }
-        },
-        "policyholder_id": "{{ claim.policy.policyholder_id }}"
+      "block": {
+          "key": "beneficiary_id_verification_status",
+          "type": "radio",
+          "title": "Benificiary ID verification status",
+          "options": [
+              {
+                  "key": "verification_initiated",
+                  "value": "Verification initiated"
+              },
+              {
+                  "key": "processing",
+                  "value": "Processing"
+              },
+              {
+                  "key": "complete",
+                  "value": "Complete"
+              }
+          ],
+          "description": " ",
+          "default_value": "complete"
       },
-      "title": "Payout request",
-      "amount": "{{ claim.policy.sum_assured }}",
-      "description": "Monetary payout to be actioned on approval of claim {{ claim.claim_number }} "
-    },
-    "disabled_if": "{{#ifEquals claim.approval_status 'approved'}}false{{else}}true{{/ifEquals}}"
+      "disabled_if": "true"
   },
   {
-    "block": {
-      "key": "fulfillment_request_divider_1",
-      "type": "divider"
-    }
-  },
-  {
-    "block": {
-      "key": "fulfillment_heading_1",
-      "type": "heading",
-      "title": "Extraction benefit"
-    }
-  },
-  {
-    "block": {
-      "key": "extraction_fulfillment_request",
-      "type": "fulfillment_request",
-      "title": "Request details",
-      "description": "Extraction request",
-      "fulfillment_data": {
-        "extraction_date": "{{claim.block_states.incident_date.value}}"
+      "block": {
+          "key": "beneficiary_id_verification_response",
+          "type": "input.text",
+          "title": "Beneficiary ID"
       },
-      "fulfillment_type_key": "extraction"
-    }
+      "hide_if": "true"
+  },
+  {
+      "block": {
+          "key": "beneficiary_id_success_alert",
+          "type": "alert",
+          "color": "success",
+          "markdown": "{{ claim.app_data.beneficiary_id_verification.message }}"
+      },
+      "show_if": "{{ifCondition (ifCondition claim.app_data '!=='  null) '&&' (ifCondition claim.app_data.beneficiary_id_verification.status '==='  'exists')}}"
+  },
+  {
+      "block": {
+          "key": "beneficiary_id_error_alert",
+          "type": "alert",
+          "color": "danger",
+          "markdown": "Error: {{ claim.app_data.beneficiary_id_verification.message }}"
+      },
+      "show_if": "{{ifCondition (ifCondition claim.app_data '!=='  null) '&&' (ifCondition claim.app_data.beneficiary_id_verification.status '!=='  'exists')}}"
   }
 ]
