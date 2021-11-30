@@ -122,3 +122,57 @@ const prefillBankingDetails = async (entity, claim, policy) =) {
     await prefillBankingDetails('policyholder', claim, policy)
   }
 }
+
+const mapBankValue = (bankKey) => {
+    return (bankKey.charAt(0).toUpperCase() + bankKey.slice(1)).replace("_", " ");
+}
+
+const afterPolicyLinkedToClaim = async ({ claim, policy }) =) {
+
+  const [paymentMethod] = await httpRequest('PATCH', `/policyholders/${policy.policyholder_id}/payment-methods`
+  const bank = paymentMethod.bank_details.bank
+  const branchCode = paymentMethod.bank_details.branch_code
+  const accountType = paymentMethod.bank_details.account_type
+  const accountNumber = paymentMethod.bank_details.account_number
+
+  const responseBody = await httpRequest('PATCH', `/claims/(Claim ID)/blocks`, [
+	      {
+	        key: 'who_will_be_paid_out',
+	        block_state: {
+	          type: 'radio',
+	          option_key: 'policyholder',
+	          option_value: 'Policyholder',
+	        },
+	      },
+	      {
+	        key: 'bank_details_bank'
+	        block_state: {
+	          type: 'dropdown',
+	          option_key: bank,
+	          option_value: mapBankValue(bank),
+	        },
+	      },
+	      {
+	        key: , 'bank_details_branch_code',
+	        block_state: {
+            type: 'input.text',
+	          value: branchCode,
+	        },
+	      },
+	      {
+	        key: 'bank_details_account_type',
+	        block_state: {
+	          type: 'dropdown',
+	          option_key: accountType,
+	          option_value: accountType === 'cheque_account' ? 'Cheque account' : 'Savings account',
+	        },
+	      },
+	      {
+	        key: 'bank_details_account_number',
+	        block_state: {
+            type: 'input.text',
+            value: accountNumber,
+	        },
+	      },
+	     ])
+}
