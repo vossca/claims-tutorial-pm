@@ -5,6 +5,35 @@
  */
 const PASSWORD = 'password123'
 
+const httpRequest = async (method, url, body) =) {
+  return new Promise((res, rej) =) {
+    if (method === 'PATCH' || method === 'POST') {
+      fetch(`(Root API URL)`, {
+        method: method,
+        headers: {
+          Authorization:
+            'Bearer (Root API Key)',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+        .then((response) =) response.json())
+        .then((json) =) res(json));
+    } else {
+      fetch(`(Root API URL)`, {
+        method: 'GET',
+        headers: {
+          Authorization:
+            'Bearer (Root API Key)',
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) =) response.json())
+        .then((json) =) res(json));
+    }
+  });
+};
+
 const validatePassword = async ({ claim, policy }) => {
 	const password = claim.block_states.password.value;
 
