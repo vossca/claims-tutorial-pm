@@ -84,7 +84,7 @@
       "block": {
           "key": "bank_details_account_number",
           "type": "input.text",
-          "title": "Account number",
+          "title": "Account number"
       },
       "disabled_if": "{{ifCondition claim.block_states.team_handling_the_claim.option_key '==='  'team_beta'}}"
   },
